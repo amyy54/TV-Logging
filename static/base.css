@@ -41,6 +41,7 @@ body {
 
 .subtitle {
   color: var(--bs-gray-500);
+  margin-bottom: 0.5rem !important;
 }
 
 .showbox {
@@ -53,9 +54,13 @@ body {
 
   .text {
     display: inline-block;
+
+    p {
+      margin-bottom: 0px;
+    }
   }
 
-  .text p {
+  .text p div {
     float: left;
     margin: 0px;
     clear: both;
@@ -76,4 +81,28 @@ body {
 .homenotif {
   text-align: center;
   padding-top: 1.5rem;
+}
+
+.pbar {
+  margin-top: 0.3rem;
+  background-color: var(--bs-gray-700);
+  width: 15rem;
+  border-radius: 15px;
+}
+
+.pbar-progress {
+  background-color: var(--bs-success);
+  color: white;
+  padding: 1%;
+  border-radius: 15px;
+  font-size: 12px;
+  text-align: right;
+  padding-right: 0.3rem;
+  font-weight: 800;
+}
+
+.show-title-link {
+  text-decoration: none;
+  color: var(--bs-white);
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
 }

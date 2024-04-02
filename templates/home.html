@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% load tvlog_extras %}
 {% block content %}
-{% if not user.is_authenticated %}
+{% if user.is_authenticated %}
+<h1 class="display-4">My Progress</h1>
+<hr>
+{% for x in current %}
+{% tvboxshortprogress x %}
+{% endfor %}
+{% else %}
 <p class="homenotif">Welcome to TV Logging! Please Log In or Sign Up using the buttons above.</p>
 {% endif %}
 <h1 class="display-4">Recently Added</h1>

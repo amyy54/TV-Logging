@@ -14,7 +14,10 @@ class HomeView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         user = self.request.user
-        # context["current"] = user.currentlywatching_set.all()
+        if user.is_authenticated:
+            context['current'] = [x for x in user.currentlywatching_set.order_by('-date') if x.episode < x.season.episodes][:3]
+        else:
+            context['current'] = []
         context["last_added_shows"] = Show.objects.order_by('-creation_date')[::-1][:3]
         return context
 
