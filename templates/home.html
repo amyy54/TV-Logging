@@ -1,4 +1,12 @@
 {% extends "base.html" %}
+{% load tvlog_extras %}
 {% block content %}
-<p>Hello World!</p>
+{% if not user.is_authenticated %}
+<p class="homenotif">Welcome to TV Logging! Please Log In or Sign Up using the buttons above.</p>
+{% endif %}
+<h1 class="display-4">Recently Added</h1>
+<hr>
+{% for x in last_added_shows %}
+{% tvbox x %}
+{% endfor %}
 {% endblock content %}

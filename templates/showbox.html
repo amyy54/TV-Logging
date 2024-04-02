@@ -1,0 +1,8 @@
+{% load tvlog_extras %}
+<div class="showbox simple-show">
+  <img class="me-2" src="{{ show.boxart.url }}" width=100 height=147>
+  <div class="text">
+    <p class="h1">{{ show.name }}</p>
+    <p class="subtitle">({{ show|showrun }})</p>
+  </div>
+</div>
