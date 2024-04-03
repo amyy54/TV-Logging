@@ -7,7 +7,7 @@ class Show(models.Model):
     startdate = models.DateField()
     enddate = models.DateField(blank=True, null=True)
     boxart = models.ImageField(blank=True, null=True, upload_to="images/")
-    abbreviation = models.CharField(max_length=25, unique=True)
+    abbreviation = models.SlugField()
     creation_date = models.DateField(auto_now_add=True,)
 
     def __str__(self):

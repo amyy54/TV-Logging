@@ -1,8 +1,8 @@
 {% load tvlog_extras %}
 <div class="showbox">
-  <a href="/"><img class="me-2" src="{{ watching.season.show.boxart.url }}" width=100 height=147></a>
+  <a href="{% url 'show_detail' watching.season.show.abbreviation %}"><img class="me-2" src="{{ watching.season.show.boxart.url }}" width=100 height=147></a>
   <div class="text">
-    <a class="h1 show-title-link" href="/">{{ watching.season.show.name }}</a>
+    <a class="h1 show-title-link" href="{% url 'show_detail' watching.season.show.abbreviation %}">{{ watching.season.show.name }}</a>
     <p class="subtitle">({{ watching.season.show|showrun }})</p>
     <p>Season {{ watching.season.name }} - Episode {{ watching.episode }}/{{ watching.season.episodes }}</p>
     <div class="pbar">

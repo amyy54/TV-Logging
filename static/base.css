@@ -32,7 +32,7 @@ body {
 
 .content {
   margin: 0 auto;
-  width: 700px;
+  width: 800px;
 }
 
 .author-name {
@@ -42,6 +42,11 @@ body {
 .subtitle {
   color: var(--bs-gray-500);
   margin-bottom: 0.5rem !important;
+}
+
+.small-subtitle {
+  font-size: .7em;
+  display: inline-block;
 }
 
 .showbox {
@@ -105,4 +110,36 @@ body {
   text-decoration: none;
   color: var(--bs-white);
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+
+.search-term {
+  font-weight: 800;
+}
+
+.detail-left {
+  margin-top: 1rem;
+  height: calc(100% - 61px - 1rem);
+  float: left;
+  margin-right: 1.5rem;
+
+  .btn {
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    width: 100%;
+  }
+}
+
+.rating-stars {
+  width: 70%;
+}
+
+.image-inline {
+  display: flex;
+  align-items: center;
+  width: 110%;
+  svg {
+    margin-left: 0.3rem;
+  }
 }

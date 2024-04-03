@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load tvlog_extras %}
+{% block content %}
+<h1 class="display-4">Shows</h1>
+<hr>
+{% if search_query != "" %}
+<p>Results for: <span class="search-term">{{ search_query }}</span></p>
+{% endif %}
+{% for x in shows %}
+{% tvbox x %}
+{% endfor %}
+{% endblock content %}

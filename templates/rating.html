@@ -1,0 +1,45 @@
+<div class="d-flex">
+  <div class="flex-fill">
+    {% if rating > 1 %}
+    {% include "svg/star.fill.svg" %}
+    {% else %}
+    {% include "svg/star.leadinghalf.filled.svg" %}
+    {% endif %}
+  </div>
+  <div class="flex-fill">
+    {% if rating > 3 %}
+    {% include "svg/star.fill.svg" %}
+    {% elif rating == 3 %}
+    {% include "svg/star.leadinghalf.filled.svg" %}
+    {% else %}
+    {% include "svg/star.svg" %}
+    {% endif %}
+  </div>
+  <div class="flex-fill">
+    {% if rating > 5 %}
+    {% include "svg/star.fill.svg" %}
+    {% elif rating == 5 %}
+    {% include "svg/star.leadinghalf.filled.svg" %}
+    {% else %}
+    {% include "svg/star.svg" %}
+    {% endif %}
+  </div>
+  <div class="flex-fill">
+    {% if rating > 7 %}
+    {% include "svg/star.fill.svg" %}
+    {% elif rating == 7 %}
+    {% include "svg/star.leadinghalf.filled.svg" %}
+    {% else %}
+    {% include "svg/star.svg" %}
+    {% endif %}
+  </div>
+  <div class="flex-fill">
+    {% if rating > 9 %}
+    {% include "svg/star.fill.svg" %}
+    {% elif rating == 9 %}
+    {% include "svg/star.leadinghalf.filled.svg" %}
+    {% else %}
+    {% include "svg/star.svg" %}
+    {% endif %}
+  </div>
+</div>
