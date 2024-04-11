@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from datetime import date
 # Create your models here.
 class Show(models.Model):
@@ -26,12 +28,19 @@ class CurrentlyWatching(models.Model):
     author = models.ForeignKey("auth.user", on_delete=models.CASCADE)
     date = models.DateField(default=date.today)
     season = models.ForeignKey("Season", on_delete=models.CASCADE)
-    episode = models.PositiveSmallIntegerField() # Referencing Season total episode count doesn't work, must be checked before added to database.
+    episode = models.PositiveSmallIntegerField(default=1)
     rating = models.IntegerField(default=0, validators=[MaxValueValidator(10), MinValueValidator(0)]) # 0 = No rating.
     rewatch = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.author.username} watching {str(self.season)} on episode {self.episode}"
+
+    def clean(self):
+        if self.episode > self.season.episodes:
+            raise ValidationError({'episode': _(f"Episode may not exceed {self.season.episodes}.")})
+
+        if self.episode < 0:
+            raise ValidationError({'episode': _("Episode cannot be lower than zero.")})
 
 # class Watched(models.Model):
 #     author = models.ForeignKey("auth.user", on_delete=models.CASCADE)

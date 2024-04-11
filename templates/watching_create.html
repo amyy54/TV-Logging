@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+<form class="mt-3" action="" method="post">
+  {% csrf_token %}
+  {% if type == "new" %}
+  <div class="mb-3">
+    <label for="{{ form.season.id_for_label }}" class="form-label">Season</label>
+    <select name="{{ form.season.html_name }}" id="{{ form.season.id_for_label }}" class="form-select" required>
+      {% for season in form.season.field.queryset %}
+      <option value="{{ season.pk }}" {% if season in logged_seasons %}disabled{% endif %}>Season {{ season.name }} ({{ season.episodes }})</option>
+      {% endfor %}
+    </select>
+  </div>
+  {% else %}
+  <div class="mb-3">
+    <label for="{{ form.season.id_for_label }}" class="form-label">Season</label>
+    <select name="{{ form.season.html_name }}" id="{{ form.season.id_for_label }}" class="form-select" disabled>
+      <option value="{{ watching.season.pk }}" >Season {{ watching.season.name }} ({{ watching.season.episodes }})</option>
+    </select>
+  </div>
+  {% endif %}
+  <div class="row g-3 mb-3">
+    <div class="col-sm-7">
+      <label for="{{ form.date.id_for_label }}" class="form-label">Log Date</label>
+      <input type="date" class="form-control" name="{{ form.date.html_name}}" id="{{ form.date.id_for_label }}" value="{{ form.date.value.isoformat }}" required>
+    </div>
+    <div class="col-sm">
+      <label for="{{ form.episode.id_for_label }}" class="form-label" required>Episode</label>
+      <input type="number" class="form-control {% if form.episode.errors %}is-invalid{% endif %}" name="{{ form.episode.html_name }}" id="{{ form.episode.id_for_label }}" min=0 value={{ form.episode.value }}>
+      <div class="invalid-feedback">
+        {{ form.episode.errors }}
+      </div>
+    </div>
+    <div class="col-sm form-check">
+      <input type="checkbox" class="form-check-input" name="{{ form.rewatch.html_name }}" id="{{ form.rewatch.id_for_label }}">
+      <label class="form-check-label" for="{{ form.rewatch.id_for_label }}">Rewatch</label>
+    </div>
+  </div>
+  <label class="forn-label">Rating</label>
+  <div class="d-flex w-50 mb-4">
+    <div class="flex-fill rating-input">
+      <input type="number" class="form-control" name="{{ form.rating.html_name }}" id="{{ form.rating.id_for_label }}" min=0 max=10 value={{ form.rating.value }} onchange="rating_changed()">
+    </div>
+    <div class="flex-fill pt-1">
+      <div class="rating-stars">
+        <div class="d-flex">
+          <div class="flex-fill" id="star1"></div>
+          <div class="flex-fill" id="star2"></div>
+          <div class="flex-fill" id="star3"></div>
+          <div class="flex-fill" id="star4"></div>
+          <div class="flex-fill" id="star5"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+   <button type="submit" class="btn btn-success">Submit</button>
+</form>
+{% endblock content %}
+
+{% block script %}
+<script>
+  function renderStars(rating) {
+    for (let i = 1; i <= 5; i++) {
+      const star = document.getElementById(`star${i}`);
+      if (rating >= i * 2) {
+        star.innerHTML = `{% include "svg/star.fill.svg" %}`;
+      } else if (rating == (i * 2) - 1) {
+        star.innerHTML = `{% include "svg/star.leadinghalf.filled.svg" %}`;
+      } else {
+        star.innerHTML = `{% include "svg/star.svg" %}`;
+      }
+    }
+  }
+  renderStars({{ form.rating.value }});
+  function rating_changed() {
+    renderStars(document.getElementById("{{ form.rating.id_for_label }}").value);
+  }
+</script>
+{% endblock script %}

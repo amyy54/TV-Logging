@@ -1,11 +1,13 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models import F
-from .models import Show
+from django.urls import reverse_lazy
+from .models import Show, CurrentlyWatching, Season
+from .forms import NewLogForm, UpdateLogForm
 # Create your views here.
 class HomeView(TemplateView):
     template_name = "home.html"
@@ -68,7 +70,59 @@ class ShowDetailView(DetailView):
 
         return context
 
-# class LogListView(ListView):
-#     model = User
-#     context_object_name = "users"
-#     template_name = "home.html"
+class WatchingCreateView(LoginRequiredMixin, CreateView):
+    model = CurrentlyWatching
+    template_name = "watching_create.html"
+    form_class = NewLogForm
+    success_url = reverse_lazy("home")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['type'] = "new"
+
+        user = self.request.user
+        show = self.kwargs.pop('show', None)
+        logged_seasons = user.currentlywatching_set.filter(season__show=show)
+        context['logged_seasons'] = [x.season for x in logged_seasons]
+
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        slug = self.kwargs.pop('abbreviation', None)
+        show = get_object_or_404(Show, abbreviation=slug)
+        kwargs['show'] = show
+        self.kwargs['show'] = show
+
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+class WatchingUpdateView(LoginRequiredMixin, UpdateView):
+    model = CurrentlyWatching
+    template_name = "watching_create.html"
+    context_object_name = "watching"
+    form_class = UpdateLogForm
+    success_url = reverse_lazy("home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['type'] = "update"
+
+        return context
+
+    def get_object(self, *args, **kwargs):
+        obj = super(WatchingUpdateView, self).get_object(*args, **kwargs)
+        if not obj.author == self.request.user:
+            raise Http404
+        return obj
+
+    def form_valid(self, form, *args, **kwargs):
+        obj = super(WatchingUpdateView, self).get_object(*args, **kwargs)
+        if not obj.author == self.request.user:
+            raise Http404
+        else:
+            return super().form_valid(form)

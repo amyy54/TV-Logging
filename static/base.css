@@ -132,7 +132,31 @@ body {
 }
 
 .rating-stars {
-  width: 70%;
+  width: 203px;
+}
+
+.rating-input {
+  width: 0px;
+
+  input {
+    width: 70%;
+  }
+}
+
+.rating-row {
+  width: 80%;
+
+  .rating-stars {
+    padding-top: 2rem;
+  }
+
+  input {
+    width: 50%;
+  }
+
+  button {
+    margin-top: 2rem;
+  }
 }
 
 .image-inline {
@@ -142,4 +166,8 @@ body {
   svg {
     margin-left: 0.3rem;
   }
+}
+
+.row .form-check {
+  padding-top: 2.3rem;
 }

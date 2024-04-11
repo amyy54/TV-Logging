@@ -9,17 +9,17 @@
       Log TV Show
     </button>
     <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">Log New Season</a></li>
+      <li><a class="dropdown-item" href="{% url 'log_new' show.abbreviation %}">Log New Season</a></li>
       {% if progress_watching %}
       <li><h6 class="dropdown-header">Update Watching</h6></li>
       {% for watching in progress_watching %}
-      <li><a class="dropdown-item" href="#">Season {{ watching.season.name }} - {{ watching.episode }}/{{ watching.season.episodes }}</a></li>
+      <li><a class="dropdown-item" href="{% url 'log_update' show.abbreviation watching.pk %}">Season {{ watching.season.name }} - {{ watching.episode }}/{{ watching.season.episodes }}</a></li>
       {% endfor %}
       {% endif %}
       {% if progress_watched %}
       <li><h6 class="dropdown-header">Update Watched</h6></li>
       {% for watched in progress_watched %}
-      <li><a class="dropdown-item" href="#">Season {{ watched.season.name }} - {% if rating == 0 %}{{ watched|watchingdate }}{% else %}{{ watched.rating|ratingoutof5 }}/5 Stars{% endif %}</a></li>
+      <li><a class="dropdown-item" href="{% url 'log_update' show.abbreviation watched.pk %}">Season {{ watched.season.name }} - {% if rating == 0 %}{{ watched|watchingdate }}{% else %}{{ watched.rating|ratingoutof5 }}/5 Stars{% endif %}</a></li>
       {% endfor %}
       {% endif %}
     </ul>
