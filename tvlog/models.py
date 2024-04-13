@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -42,9 +43,9 @@ class CurrentlyWatching(models.Model):
         if self.episode < 0:
             raise ValidationError({'episode': _("Episode cannot be lower than zero.")})
 
-# class Watched(models.Model):
-#     author = models.ForeignKey("auth.user", on_delete=models.CASCADE)
-#     show = models.ForeignKey("Show", on_delete=models.CASCADE)
-#     date = models.DateField(default=date.today)
-#     review = models.CharField(max_length=500)
-#     rewatch = models.BooleanField(default=False)
+class UserEx(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    isEditor = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username

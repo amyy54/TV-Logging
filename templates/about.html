@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="display-4">About</h1>
+<hr>
+<p>This is a website designed for the logging of TV show watching progress! It allows for users to log their own progress on TV shows, update that progress as time progresses, and rate seasons of TV when finished!</p>
+<p>This was designed for a school advanced web developing project, and I had a lot of fun with it! It's a pretty simple site, though will get a lot of use from me and others as time progresses. Enjoy! - Amy</p>
+<div class="d-flex">
+  <div class="flex-fill"></div>
+  <div class="about">
+    <p>Total Users: {{ user_count }}</p>
+    <p>Total Shows: {{ show_count }}</p>
+    <p>Total Logs: {{ log_count }}</p>
+  </div>
+  <div class="flex-fill"></div>
+</div>
+{% endblock content %}

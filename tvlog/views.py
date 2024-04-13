@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -20,6 +20,19 @@ class HomeView(TemplateView):
         if user.is_authenticated:
             context['current'] = [x for x in user.currentlywatching_set.order_by('-date') if x.episode < x.season.episodes]
         context["last_added_shows"] = Show.objects.order_by('creation_date')[::-1][:3]
+        return context
+
+class AboutView(TemplateView):
+    template_name = "about.html"
+    context_object_name = "stats"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['user_count'] = User.objects.all().count()
+        context['show_count'] = Show.objects.all().count()
+        context['log_count'] = CurrentlyWatching.objects.all().count()
+
         return context
 
 class ShowListView(ListView):
@@ -122,6 +135,32 @@ class WatchingUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form, *args, **kwargs):
         obj = super(WatchingUpdateView, self).get_object(*args, **kwargs)
+        if not obj.author == self.request.user:
+            raise Http404
+        else:
+            return super().form_valid(form)
+
+class WatchingDeleteView(LoginRequiredMixin, DeleteView):
+    model = CurrentlyWatching
+    template_name = "object_delete.html"
+    context_object_name = "watching"
+    success_url = reverse_lazy("home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['flavor_string'] = f"{self.request.user.username}'s log for {context['watching'].season.show.name} - Season {context['watching'].season.name}"
+
+        return context
+
+    def get_object(self, *args, **kwargs):
+        obj = super(WatchingDeleteView, self).get_object(*args, **kwargs)
+        if not obj.author == self.request.user:
+            raise Http404
+        return obj
+
+    def form_valid(self, form, *args, **kwargs):
+        obj = super(WatchingDeleteView, self).get_object(*args, **kwargs)
         if not obj.author == self.request.user:
             raise Http404
         else:

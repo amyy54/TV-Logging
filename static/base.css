@@ -118,7 +118,7 @@ body {
 
 .detail-left {
   margin-top: 1rem;
-  height: calc(100% - 61px - 1rem);
+  height: calc(100% - 61px - 1.5rem);
   float: left;
   margin-right: 1.5rem;
 
@@ -170,4 +170,8 @@ body {
 
 .row .form-check {
   padding-top: 2.3rem;
+}
+
+.about p {
+  margin-bottom: 0;
 }

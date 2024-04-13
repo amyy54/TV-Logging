@@ -53,7 +53,14 @@
       </div>
     </div>
   </div>
-   <button type="submit" class="btn btn-success">Submit</button>
+  {% if type == "update" %}
+  <div class="d-flex w-25">
+    <button type="submit" class="btn btn-success flex-fill me-2">Submit</button>
+    <a type="button" class="btn btn-danger flex-fill" href="{% url 'log_delete' watching.season.show.abbreviation watching.pk %}">Delete Log</a>
+  </div>
+  {% else %}
+  <button type="submit" class="btn btn-success flex-fill me-2">Submit</button>
+  {% endif %}
 </form>
 {% endblock content %}
 
