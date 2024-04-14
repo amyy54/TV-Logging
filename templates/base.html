@@ -44,7 +44,7 @@
                 <li><a class="dropdown-item" href="/">My Progress</a></li>
                 <li><a class="dropdown-item" href="/">Watchlist</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/">Logout</a></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
               </ul>
             </li>
             {% if user.userex.isEditor %}
@@ -54,16 +54,15 @@
               </a>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="/">Add Show</a></li>
-                <li><a class="dropdown-item" href="/">Add Season</a></li>
               </ul>
             </li>
             {% endif %}
             {% else %}
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Log In</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Log In</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Sign Up</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'signup' %}">Sign Up</a>
             </li>
             {% endif %}
           </ul>

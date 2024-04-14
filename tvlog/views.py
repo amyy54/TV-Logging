@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
-from django.http import HttpResponse
+from django.http import Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models import F
@@ -179,11 +179,11 @@ class SeasonCreateView(LoginRequiredMixin, CreateView):
 
         return context
 
-    def get_object(self, *args, **kwargs):
+    def get_form(self):
         if not self.request.user.userex.isEditor:
             raise Http404
         else:
-            return super().get_object(*args, **kwargs)
+            return super().get_form()
 
     def form_valid(self, form, *args, **kwargs):
         if not self.request.user.userex.isEditor:
