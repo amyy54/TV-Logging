@@ -5,11 +5,14 @@
   {% if type == "new" %}
   <div class="mb-3">
     <label for="{{ form.season.id_for_label }}" class="form-label">Season</label>
-    <select name="{{ form.season.html_name }}" id="{{ form.season.id_for_label }}" class="form-select" required>
+    <select name="{{ form.season.html_name }}" id="{{ form.season.id_for_label }}" class="form-select {% if form.season.errors %}is-invalid{% endif %}" required>
       {% for season in form.season.field.queryset %}
       <option value="{{ season.pk }}" {% if season in logged_seasons %}disabled{% endif %}>Season {{ season.name }} ({{ season.episodes }})</option>
       {% endfor %}
     </select>
+    <div class="invalid-feedback">
+      {{ form.season.errors }}
+    </div>
   </div>
   {% else %}
   <div class="mb-3">
@@ -22,7 +25,10 @@
   <div class="row g-3 mb-3">
     <div class="col-sm-7">
       <label for="{{ form.date.id_for_label }}" class="form-label">Log Date</label>
-      <input type="date" class="form-control" name="{{ form.date.html_name}}" id="{{ form.date.id_for_label }}" value="{{ form.date.value.isoformat }}" required>
+      <input type="date" class="form-control {% if form.date.errors %}is-invalid{% endif %}" name="{{ form.date.html_name}}" id="{{ form.date.id_for_label }}" value="{{ form.date.value.isoformat }}" required>
+      <div class="invalid-feedback">
+        {{ form.date.errors }}
+      </div>
     </div>
     <div class="col-sm">
       <label for="{{ form.episode.id_for_label }}" class="form-label" required>Episode</label>
@@ -39,7 +45,10 @@
   <label class="forn-label">Rating</label>
   <div class="d-flex w-50 mb-4">
     <div class="flex-fill rating-input">
-      <input type="number" class="form-control" name="{{ form.rating.html_name }}" id="{{ form.rating.id_for_label }}" min=0 max=10 value={{ form.rating.value }} onchange="rating_changed()">
+      <input type="number" class="form-control {% if form.rating.errors %}is-invalid{% endif %}" name="{{ form.rating.html_name }}" id="{{ form.rating.id_for_label }}" min=0 max=10 value={{ form.rating.value }} onchange="rating_changed()">
+      <div class="invalid-feedback">
+        {{ form.rating.errors }}
+      </div>
     </div>
     <div class="flex-fill pt-1">
       <div class="rating-stars">

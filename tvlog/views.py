@@ -128,13 +128,13 @@ class WatchingUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
     def get_object(self, *args, **kwargs):
-        obj = super(WatchingUpdateView, self).get_object(*args, **kwargs)
+        obj = super().get_object(*args, **kwargs)
         if not obj.author == self.request.user:
             raise Http404
         return obj
 
     def form_valid(self, form, *args, **kwargs):
-        obj = super(WatchingUpdateView, self).get_object(*args, **kwargs)
+        obj = super().get_object(*args, **kwargs)
         if not obj.author == self.request.user:
             raise Http404
         else:
@@ -154,14 +154,93 @@ class WatchingDeleteView(LoginRequiredMixin, DeleteView):
         return context
 
     def get_object(self, *args, **kwargs):
-        obj = super(WatchingDeleteView, self).get_object(*args, **kwargs)
+        obj = super().get_object(*args, **kwargs)
         if not obj.author == self.request.user:
             raise Http404
         return obj
 
     def form_valid(self, form, *args, **kwargs):
-        obj = super(WatchingDeleteView, self).get_object(*args, **kwargs)
+        obj = super().get_object(*args, **kwargs)
         if not obj.author == self.request.user:
+            raise Http404
+        else:
+            return super().form_valid(form)
+
+class SeasonCreateView(LoginRequiredMixin, CreateView):
+    model = Season
+    template_name = "season_create.html"
+    fields = ["name", "episodes", "startdate"]
+    success_url = reverse_lazy("home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['type'] = "new"
+
+        return context
+
+    def get_object(self, *args, **kwargs):
+        if not self.request.user.userex.isEditor:
+            raise Http404
+        else:
+            return super().get_object(*args, **kwargs)
+
+    def form_valid(self, form, *args, **kwargs):
+        if not self.request.user.userex.isEditor:
+            raise Http404
+        else:
+            slug = self.kwargs.pop('abbreviation', None)
+            show = get_object_or_404(Show, abbreviation=slug)
+            form.instance.show = show
+            return super().form_valid(form)
+
+class SeasonUpdateView(LoginRequiredMixin, UpdateView):
+    model = Season
+    template_name = "season_create.html"
+    fields = ["name", "episodes", "startdate"]
+    context_object_name = "season"
+    success_url = reverse_lazy("home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['type'] = "update"
+
+        return context
+
+    def get_object(self, *args, **kwargs):
+        if not self.request.user.userex.isEditor:
+            raise Http404
+        else:
+            return super().get_object(*args, **kwargs)
+
+    def form_valid(self, form, *args, **kwargs):
+        if not self.request.user.userex.isEditor:
+            raise Http404
+        else:
+            return super().form_valid(form)
+
+class SeasonDeleteView(LoginRequiredMixin, DeleteView):
+    model = Season
+    template_name = "object_delete.html"
+    context_object_name = "season"
+    success_url = reverse_lazy("home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['flavor_string'] = f"{context['season'].show.name} - Season {context['season'].name} ({context['season'].episodes})"
+
+        return context
+
+    def get_object(self, *args, **kwargs):
+        if not self.request.user.userex.isEditor:
+            raise Http404
+        else:
+            return super().get_object(*args, **kwargs)
+
+    def form_valid(self, form, *args, **kwargs):
+        if not self.request.user.userex.isEditor:
             raise Http404
         else:
             return super().form_valid(form)
