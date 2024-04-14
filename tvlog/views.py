@@ -244,3 +244,83 @@ class SeasonDeleteView(LoginRequiredMixin, DeleteView):
             raise Http404
         else:
             return super().form_valid(form)
+
+class ShowCreateView(LoginRequiredMixin, CreateView):
+    model = Show
+    template_name = "show_create.html"
+    fields = ["name", "startdate", "enddate", "boxart", "abbreviation"]
+    success_url = reverse_lazy("home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['type'] = "new"
+
+        return context
+
+    def get_form(self):
+        if not self.request.user.userex.isEditor:
+            raise Http404
+        else:
+            return super().get_form()
+
+    def form_valid(self, form, *args, **kwargs):
+        if not self.request.user.userex.isEditor:
+            raise Http404
+        else:
+            return super().form_valid(form)
+
+class ShowUpdateView(LoginRequiredMixin, UpdateView):
+    model = Show
+    template_name = "show_create.html"
+    fields = ["name", "startdate", "enddate", "boxart", "abbreviation"]
+    context_object_name = "show"
+    success_url = reverse_lazy("home")
+    slug_field = 'abbreviation'
+    slug_url_kwarg = 'abbreviation'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['type'] = "update"
+
+        return context
+
+    def get_object(self, *args, **kwargs):
+        if not self.request.user.userex.isEditor:
+            raise Http404
+        else:
+            return super().get_object(*args, **kwargs)
+
+    def form_valid(self, form, *args, **kwargs):
+        if not self.request.user.userex.isEditor:
+            raise Http404
+        else:
+            return super().form_valid(form)
+
+class ShowDeleteView(LoginRequiredMixin, DeleteView):
+    model = Show
+    template_name = "object_delete.html"
+    context_object_name = "show"
+    success_url = reverse_lazy("home")
+    slug_field = 'abbreviation'
+    slug_url_kwarg = 'abbreviation'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['flavor_string'] = f"{context['show'].name}"
+
+        return context
+
+    def get_object(self, *args, **kwargs):
+        if not self.request.user.userex.isEditor:
+            raise Http404
+        else:
+            return super().get_object(*args, **kwargs)
+
+    def form_valid(self, form, *args, **kwargs):
+        if not self.request.user.userex.isEditor:
+            raise Http404
+        else:
+            return super().form_valid(form)

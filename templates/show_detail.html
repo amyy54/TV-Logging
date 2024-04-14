@@ -30,7 +30,7 @@
       Moderator Actions
     </button>
     <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">Update Show</a></li>
+      <li><a class="dropdown-item" href="{% url 'show_update' show.abbreviation %}">Update Show</a></li>
       <li><a class="dropdown-item" href="{% url 'season_new' show.abbreviation %}">Add Season</a></li>
       <li><h6 class="dropdown-header">Update {% if seasonplural %}Seasons{% else %}Season{% endif %}</h6></li>
       {% for season in seasons %}

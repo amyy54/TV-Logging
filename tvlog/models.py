@@ -11,12 +11,16 @@ class Show(models.Model):
     name = models.CharField(max_length=100)
     startdate = models.DateField()
     enddate = models.DateField(blank=True, null=True)
-    boxart = models.ImageField(blank=True, null=True, upload_to="images/")
+    boxart = models.ImageField(upload_to="images/")
     abbreviation = models.SlugField()
     creation_date = models.DateField(auto_now_add=True,)
 
     def __str__(self):
         return self.name
+
+    def clean(self):
+        if self.abbreviation in [x.abbreviation for x in Show.objects.all() if self.pk != x.pk]:
+            raise ValidationError({'abbreviation': _("A show slug must be unique.")})
 
 class Season(models.Model):
     name = models.CharField(max_length=50) # Seasons could have weird names. Even if most shows will just be a number, having support for something like "specials" would be valuable.
