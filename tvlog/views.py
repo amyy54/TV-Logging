@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.db.models import F
 from django.urls import reverse_lazy
 from .models import Show, CurrentlyWatching, Season
-from .forms import NewLogForm, UpdateLogForm
+from .forms import NewLogForm
 # Create your views here.
 class HomeView(TemplateView):
     template_name = "home.html"
@@ -88,6 +88,7 @@ class WatchingCreateView(LoginRequiredMixin, CreateView):
     template_name = "watching_create.html"
     form_class = NewLogForm
     success_url = reverse_lazy("home")
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -117,7 +118,7 @@ class WatchingUpdateView(LoginRequiredMixin, UpdateView):
     model = CurrentlyWatching
     template_name = "watching_create.html"
     context_object_name = "watching"
-    form_class = UpdateLogForm
+    fields = ["date", "episode", "rating", "rewatch"]
     success_url = reverse_lazy("home")
 
     def get_context_data(self, **kwargs):

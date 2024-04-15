@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="col-sm form-check">
-      <input type="checkbox" class="form-check-input" name="{{ form.rewatch.html_name }}" id="{{ form.rewatch.id_for_label }}">
+      <input type="checkbox" class="form-check-input" name="{{ form.rewatch.html_name }}" id="{{ form.rewatch.id_for_label }}" {% if form.rewatch.value %}checked{% endif %}>
       <label class="form-check-label" for="{{ form.rewatch.id_for_label }}">Rewatch</label>
     </div>
   </div>
@@ -90,6 +90,13 @@
   renderStars({{ form.rating.value }});
   function rating_changed() {
     renderStars(document.getElementById("{{ form.rating.id_for_label }}").value);
+  }
+</script>
+<script>
+  if ({{ form.episode.value }} < {{ watching.season.episodes }}) {
+    const date = new Date();
+    const log_date = document.getElementById('{{ form.date.id_for_label }}');
+    log_date.value = date.toISOString().split("T")[0];
   }
 </script>
 {% endblock script %}

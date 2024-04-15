@@ -15,11 +15,3 @@ class NewLogForm(ModelForm):
         if show is not None:
             self.fields["season"].queryset = show.season_set.order_by('startdate')
 
-class UpdateLogForm(ModelForm):
-    class Meta:
-        model = CurrentlyWatching
-        fields = ["date", "episode", "rating", "rewatch"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.initial["date"] = date.today
