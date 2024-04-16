@@ -7,12 +7,17 @@
 {% for x in current %}
 {% tvboxshortprogress x %}
 {% endfor %}
+<h1 class="display-4">Recently Watched</h1>
+<hr>
+{% for x in last_watched_shows %}
+{% tvbox x %}
+{% endfor %}
 {% else %}
 <p class="homenotif">Welcome to TV Logging! Please Log In or Sign Up using the buttons above.</p>
-{% endif %}
 <h1 class="display-4">Recently Added</h1>
 <hr>
 {% for x in last_added_shows %}
 {% tvbox x %}
 {% endfor %}
+{% endif %}
 {% endblock content %}

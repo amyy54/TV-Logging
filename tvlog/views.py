@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 from django.http import Http404
@@ -11,7 +11,6 @@ from .forms import NewLogForm
 # Create your views here.
 class HomeView(TemplateView):
     template_name = "home.html"
-    context_object_name = "object_data"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -19,12 +18,18 @@ class HomeView(TemplateView):
         user = self.request.user
         if user.is_authenticated:
             context['current'] = [x for x in user.currentlywatching_set.order_by('-date') if x.episode < x.season.episodes]
+            watched_shows = [x.season.show for x in user.currentlywatching_set.order_by('-date') if x.episode >= x.season.episodes]
+
+            # https://stackoverflow.com/a/480227
+            seen = set()
+            seen_add = seen.add
+            context['last_watched_shows'] = [x for x in watched_shows if not (x in seen or seen_add(x))][:3]
+
         context["last_added_shows"] = Show.objects.order_by('creation_date')[::-1][:3]
         return context
 
 class AboutView(TemplateView):
     template_name = "about.html"
-    context_object_name = "stats"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -171,7 +176,7 @@ class SeasonCreateView(LoginRequiredMixin, CreateView):
     model = Season
     template_name = "season_create.html"
     fields = ["name", "episodes", "startdate"]
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("shows")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -200,7 +205,7 @@ class SeasonUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "season_create.html"
     fields = ["name", "episodes", "startdate"]
     context_object_name = "season"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("shows")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -225,7 +230,7 @@ class SeasonDeleteView(LoginRequiredMixin, DeleteView):
     model = Season
     template_name = "object_delete.html"
     context_object_name = "season"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("shows")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -250,7 +255,7 @@ class ShowCreateView(LoginRequiredMixin, CreateView):
     model = Show
     template_name = "show_create.html"
     fields = ["name", "startdate", "enddate", "boxart", "abbreviation"]
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("shows")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -276,7 +281,7 @@ class ShowUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "show_create.html"
     fields = ["name", "startdate", "enddate", "boxart", "abbreviation"]
     context_object_name = "show"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("shows")
     slug_field = 'abbreviation'
     slug_url_kwarg = 'abbreviation'
 
@@ -303,7 +308,7 @@ class ShowDeleteView(LoginRequiredMixin, DeleteView):
     model = Show
     template_name = "object_delete.html"
     context_object_name = "show"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("shows")
     slug_field = 'abbreviation'
     slug_url_kwarg = 'abbreviation'
 
