@@ -52,6 +52,7 @@ class CurrentlyWatching(models.Model):
 class UserEx(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     isEditor = models.BooleanField(default=False)
+    watchlist = models.ManyToManyField(Show)
 
     def __str__(self):
         return self.user.username

@@ -9,6 +9,8 @@
       Log TV Show
     </button>
     <ul class="dropdown-menu">
+      <li><form class="mb-0" action="" method="post">{% csrf_token %}<input type="hidden" name="show" value="{{ show.abbreviation }}"><button class="dropdown-item" type="submit">{% if is_watchlist %}Remove from Watchlist{% else %}Add to Watchlist{% endif %}</button></form></li>
+      <li><hr class="dropdown-divider"></li>
       {% if progress_watched|length != seasons|length %}
       <li><a class="dropdown-item" href="{% url 'log_new' show.abbreviation %}">Log New Season</a></li>
       {% endif %}

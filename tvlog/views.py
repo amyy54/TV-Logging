@@ -2,11 +2,12 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 from django.http import Http404
+from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models import F
 from django.urls import reverse_lazy
-from .models import Show, CurrentlyWatching, Season
+from .models import Show, CurrentlyWatching, Season, UserEx
 from .forms import NewLogForm
 # Create your views here.
 class HomeView(TemplateView):
@@ -85,6 +86,34 @@ class ShowDetailView(DetailView):
             context['progress_watching'] = [x for x in currentlywatching if x.episode < x.season.episodes]
             context['progress_watched'] = [x for x in currentlywatching if x.episode >= x.season.episodes]
             context['show_progress'] = len(currentlywatching) > 0
+
+            context['is_watchlist'] = context['show'] in user.userex.watchlist.all()
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        show_req = request.POST.get('show')
+
+        show = get_object_or_404(Show, abbreviation=show_req)
+        userex = request.user.userex
+
+        if show in userex.watchlist.all():
+            userex.watchlist.remove(show)
+        else:
+            userex.watchlist.add(show)
+
+        userex.save()
+
+        return redirect("watchlist")
+
+class WatchListView(LoginRequiredMixin, TemplateView):
+    template_name = "watchlist.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        context['watchlist'] = user.userex.watchlist.all()
 
         return context
 

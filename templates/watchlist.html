@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load tvlog_extras %}
+{% block content %}
+<h1 class="display-4">Watchlist</h1>
+<hr>
+{% if not watchlist %}
+<p class="homenotif">There are no shows in this list.</p>
+{% endif %}
+{% for x in watchlist %}
+{% tvbox x %}
+{% endfor %}
+{% endblock content %}
