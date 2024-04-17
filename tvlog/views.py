@@ -20,6 +20,7 @@ class HomeView(TemplateView):
         if user.is_authenticated:
             context['current'] = [x for x in user.currentlywatching_set.order_by('-date') if x.episode < x.season.episodes]
             watched_shows = [x.season.show for x in user.currentlywatching_set.order_by('-date') if x.episode >= x.season.episodes]
+            watched_shows = [x for x in watched_shows if x not in [y.season.show for y in context['current']]]
 
             # https://stackoverflow.com/a/480227
             seen = set()
