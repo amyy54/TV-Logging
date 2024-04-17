@@ -19,13 +19,13 @@ class HomeView(TemplateView):
         user = self.request.user
         if user.is_authenticated:
             context['current'] = [x for x in user.currentlywatching_set.order_by('-date') if x.episode < x.season.episodes]
-            watched_shows = [x.season.show for x in user.currentlywatching_set.order_by('-date') if x.episode >= x.season.episodes]
-            watched_shows = [x for x in watched_shows if x not in [y.season.show for y in context['current']]]
+            watched_shows = [x for x in user.currentlywatching_set.order_by('-date') if x.episode >= x.season.episodes]
+            watched_shows = [x for x in watched_shows if x.season.show not in [y.season.show for y in context['current']]]
 
             # https://stackoverflow.com/a/480227
             seen = set()
             seen_add = seen.add
-            context['last_watched_shows'] = [x for x in watched_shows if not (x in seen or seen_add(x))][:3]
+            context['last_watched_shows'] = [x for x in watched_shows if not (x.season.show in seen or seen_add(x.season.show))][:3]
 
         context["last_added_shows"] = Show.objects.order_by('creation_date')[::-1][:3]
         return context

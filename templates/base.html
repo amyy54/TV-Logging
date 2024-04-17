@@ -3,8 +3,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TV Log</title>
     {% load static %}
+    <link rel=apple-touch-icon sizes=180x180 href="{% static 'favicon/apple-touch-icon.png' %}">
+    <link rel=icon type=image/png sizes=32x32 href="{% static 'favicon/favicon-32x32.png' %}">
+    <link rel=icon type=image/png sizes=16x16 href="{% static 'favicon/favicon-16x16.png' %}">
+    <link rel=manifest href="{% static 'favicon/site.webmanifest' %}">
+    <link rel="shortcut icon" href="{% static 'favicon/favicon.ico' %}">
+    <title>TV Log</title>
     {% load bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
@@ -64,7 +69,7 @@
             </li>
             {% endif %}
           </ul>
-          <form class="d-flex mb-0" role="search" action="/shows/" method="GET">
+          <form class="d-flex mb-0" role="search" action="{% url 'shows' %}" method="GET">
             <input class="form-control me-2 search-box" type="search" placeholder="Search for Shows" aria-label="Search" name="q">
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
