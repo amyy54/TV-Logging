@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block script %}
+<script>
+  [...document.querySelectorAll('button')].forEach(button => {
+    console.log(button.classList.contains("no-apply"))
+    if (!button.classList.contains("no-apply")) {
+      button.classList.add("btn-success");
+      button.classList.add("btn");
+    }
+  })
+</script>
+{% endblock script %}

@@ -22,7 +22,7 @@
           <img src="{% static 'logo.png' %}" alt="TV Logo" width=35 height=35>
           TV Logging
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler no-apply" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -47,7 +47,9 @@
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{% url 'watchlist' %}">Watchlist</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                <li><a class="dropdown-item" href="{% url 'account_email' %}">Manage Email</a></li>
+                <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Change Password</a></li>
+                <li><a class="dropdown-item" href="{% url 'account_logout' %}">Sign Out</a></li>
               </ul>
             </li>
             {% if user.userex.isEditor %}
@@ -62,16 +64,13 @@
             {% endif %}
             {% else %}
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Log In</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'signup' %}">Sign Up</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'account_login' %}">Log In</a>
             </li>
             {% endif %}
           </ul>
           <form class="d-flex mb-0" role="search" action="{% url 'shows' %}" method="GET">
             <input class="form-control me-2 search-box" type="search" placeholder="Search for Shows" aria-label="Search" name="q">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+            <button class="btn btn-outline-success no-apply" type="submit">Search</button>
           </form>
         </div>
       </div>
