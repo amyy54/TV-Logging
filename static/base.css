@@ -5,6 +5,9 @@ body {
 
 .navbar {
   background-color: var(--bs-dark);
+  position: sticky;
+  top: 0;
+  z-index: 1;
 
   .form-control {
     background-color: var(--bs-gray-700);

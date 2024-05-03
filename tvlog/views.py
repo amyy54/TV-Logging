@@ -133,6 +133,7 @@ class WatchingCreateView(LoginRequiredMixin, CreateView):
         show = self.kwargs.pop('show', None)
         logged_seasons = user.currentlywatching_set.filter(season__show=show)
         context['logged_seasons'] = [x.season for x in logged_seasons]
+        context['update_date'] = True
 
         return context
 
@@ -160,6 +161,7 @@ class WatchingUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
 
         context['type'] = "update"
+        context['update_date'] = context['form'].instance.episode < context['watching'].season.episodes
 
         return context
 

@@ -16,7 +16,7 @@
   </div>
   {% else %}
   <div class="mb-3">
-    <label for="{{ form.season.id_for_label }}" class="form-label">Season</label>
+    <label class="form-label">Season</label>
     <select name="{{ form.season.html_name }}" id="{{ form.season.id_for_label }}" class="form-select" disabled>
       <option value="{{ watching.season.pk }}" >Season {{ watching.season.name }} ({{ watching.season.episodes }})</option>
     </select>
@@ -92,11 +92,13 @@
     renderStars(document.getElementById("{{ form.rating.id_for_label }}").value);
   }
 </script>
+{% if update_date %}
 <script>
-  if ({{ form.episode.value }} < {{ watching.season.episodes }}) {
-    const date = new Date();
-    const log_date = document.getElementById('{{ form.date.id_for_label }}');
-    log_date.value = date.toISOString().split("T")[0];
-  }
+  // https://stackoverflow.com/a/28149561
+  const tzoffset = (new Date()).getTimezoneOffset() * 60000;
+  const date = (new Date(Date.now() - tzoffset));
+  const log_date = document.getElementById('{{ form.date.id_for_label }}');
+  log_date.value = date.toISOString().split("T")[0];
 </script>
+{% endif %}
 {% endblock script %}
