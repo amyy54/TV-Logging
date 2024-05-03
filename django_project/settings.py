@@ -31,7 +31,8 @@ EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = "/tmp"
 ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
 INVITATIONS_INVITATION_ONLY = True
-ACCEPT_INVITE_AFTER_SIGNUP = True
+INVITATIONS_ACCEPT_INVITE_AFTER_SIGNUP = True
+INVITATIONS_ALLOW_WEB_INVITES = False
 
 # Application definition
 

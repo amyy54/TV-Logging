@@ -2,4 +2,4 @@ Django~=4.2
 pillow~=10.3
 django-bootstrap-v5~=1.0
 django-allauth~=0.62
-django-invitations~=2.1
+django-invitations @ git+https://github.com/Minibeast/django-invitations.git@amy-changes
