@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Create Invite</h1>
+<p>Invite links are sent to the emails provided. You cannot send an email to a user who already has a pending invite or an account.</p>
+<form action="" method="post">
+  {% csrf_token %}
+  <div class="d-flex">
+    <div class="form-floating mb-3 flex-fill">
+      <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
+      <label for="floatingInput">Email address</label>
+    </div>
+    <div class="flex-fill">
+      <button type="submit" class="btn btn-success mt-2 ms-4">Send Invite</button>
+    </div>
+  </div>
+</form>
+{% if invite_url %}
+<div class="d-flex">
+  <div>
+    <ul>
+      <li id="invite-link">{{ invite_url }}</li>
+    </ul>
+  </div>
+  <div class="flex-fill">
+    <button class="btn btn-info ms-4" onclick="copyLink();">Copy</button>
+  </div>
+</div>
+{% endif %}
+{% endblock content %}
+{% block script %}
+<script>
+function copyLink() {
+  var copyText = document.getElementById("invite-link");
+  navigator.clipboard.writeText(copyText.innerText);
+}
+</script>
+{% endblock script %}

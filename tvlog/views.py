@@ -6,7 +6,10 @@ from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models import F
-from django.urls import reverse_lazy
+from django.conf import settings
+from django.utils.crypto import get_random_string
+from django.urls import reverse_lazy, reverse
+from invitations.utils import get_invitation_model
 from .models import Show, CurrentlyWatching, Season, UserEx
 from .forms import NewLogForm
 # Create your views here.
@@ -362,3 +365,39 @@ class ShowDeleteView(LoginRequiredMixin, DeleteView):
             raise Http404
         else:
             return super().form_valid(form)
+
+class InviteCreateView(LoginRequiredMixin, TemplateView):
+    template_name = "create_invite.html"
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.userex.isEditor:
+            raise Http404
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.userex.isEditor:
+            raise Http404
+
+        email_req = request.POST.get('email')
+        if not email_req:
+            email_req = f'{get_random_string(10).lower()}@example.com'
+
+        invitation = get_invitation_model()
+        invite = invitation.create(email_req, inviter=request.user)
+        invite.send_invitation(request)
+
+        url_name = "invitations:accept-invite"
+
+        try:
+            url_name = settings.INVITATIONS_CONFIRMATION_URL_NAME
+        except AttributeError:
+            pass
+
+        invite_url = reverse(url_name, args=[invite.key])
+        invite_url = request.build_absolute_uri(invite_url)
+
+        context = self.get_context_data(**kwargs)
+        context['invite_url'] = invite_url
+
+        return self.render_to_response(context=context)

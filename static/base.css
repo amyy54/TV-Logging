@@ -3,6 +3,10 @@ body {
   color: var(--bs-white);
 }
 
+.form-floating {
+  color: var(--bs-dark);
+}
+
 .navbar {
   background-color: var(--bs-dark);
   position: sticky;
