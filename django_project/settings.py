@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from os import getenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,19 +21,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5j6!fbc2d1ag)_rzgw0l1e#q(9pkbzk7e@jzpx*ja%u**ex$sk'
+SECRET_KEY = getenv("SECRET_KEY", 'django-insecure-5j6!fbc2d1ag)_rzgw0l1e#q(9pkbzk7e@jzpx*ja%u**ex$sk')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv("DEBUG", True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = getenv("ALLOWED_HOSTS", '127.0.0.1').split(',')
 
+# TODO add email functionality.
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = "/tmp"
+
 ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
 INVITATIONS_INVITATION_ONLY = True
 INVITATIONS_ACCEPT_INVITE_AFTER_SIGNUP = True
 INVITATIONS_ALLOW_WEB_INVITES = False
+
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"
 
 # Application definition
 
@@ -127,14 +133,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [str(BASE_DIR.joinpath("static"))]
-MEDIA_URL = 'media/'
-MEDIA_ROOT = str(BASE_DIR.joinpath("media"))
+STATIC_URL = getenv("STATIC_URL", 'static/')
+if DEBUG:
+    STATICFILES_DIRS = [str(BASE_DIR.joinpath("static"))]
+else:
+    STATIC_ROOT = getenv("STATIC_ROOT", str(BASE_DIR.joinpath("static")))
+
+MEDIA_URL = getenv("MEDIA_URL", 'media/')
+MEDIA_ROOT = getenv("MEDIA_ROOT", str(BASE_DIR.joinpath("media")))
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-LOGIN_REDIRECT_URL = "home"
-LOGOUT_REDIRECT_URL = "home"
