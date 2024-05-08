@@ -37,7 +37,6 @@ INVITATIONS_INVITATION_ONLY = True
 INVITATIONS_ACCEPT_INVITE_AFTER_SIGNUP = True
 INVITATIONS_ALLOW_WEB_INVITES = False
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
@@ -139,6 +138,7 @@ STATIC_URL = getenv("STATIC_URL", 'static/')
 STATICFILES_DIRS = [str(BASE_DIR.joinpath("static"))]
 if not DEBUG:
     STATIC_ROOT = getenv("STATIC_ROOT", str(BASE_DIR.joinpath("static")))
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 MEDIA_URL = getenv("MEDIA_URL", 'media/')
 MEDIA_ROOT = getenv("MEDIA_ROOT", str(BASE_DIR.joinpath("media")))
