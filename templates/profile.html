@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+{% load tvlog_extras %}
+<h1 class="display-2">{{ profile.userex.displayname }}</h1>
+<p>Joined: <span class="search-term">{{ profile.date_joined|joindate }}</span>{% if profile.is_superuser %} <span class="badge badge-owner">Owner</span>{% elif profile.userex.isEditor %} <span class="badge bg-primary">Editor</span>{% endif %} </p>
+{% if not profile.userex.isPublic %}
+<div class="alert alert-danger" role="alert">This profile is private. Only you can see it! This can be changed in the <a href="{% url 'editprofile' %}">edit profile</a> menu.</div>
+{% endif %}
+{% if current %}
+<h1 class="display-4">Currently Watching</h1>
+<hr>
+{% for x in current %}
+{% tvboxshortprogress x %}
+{% endfor %}
+{% endif %}
+<h1 class="display-4">Recently Watched</h1>
+<hr>
+{% for x in last_watched_shows %}
+{% tvboxshortprogress x %}
+{% endfor %}
+{% endblock content %}

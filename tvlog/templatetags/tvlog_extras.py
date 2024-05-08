@@ -1,15 +1,20 @@
 from django import template
+from django.conf import settings
 from tvlog.models import Show, CurrentlyWatching, Season
-from datetime import date
+from datetime import date, datetime
 
 register = template.Library()
+
+@register.simple_tag
+def inDebug():
+    return settings.DEBUG
 
 @register.inclusion_tag("showbox.html")
 def tvbox(show: Show):
     return {"show": show}
 
 @register.inclusion_tag("showbox_shortprogress.html")
-def tvboxshortprogress(watching: CurrentlyWatching):
+def tvboxshortprogress(watching: []):
     return {"watching": watching}
 
 @register.inclusion_tag("rating.html")
@@ -47,6 +52,10 @@ def watchingdate(watching: CurrentlyWatching):
         return watchdate.strftime("%B %-d")
     else:
         return watchdate.strftime("%b. %Y")
+
+@register.filter
+def joindate(date: datetime):
+    return date.strftime("%b. %Y")
 
 @register.filter
 def ratingoutof5(rating):

@@ -53,6 +53,8 @@ class UserEx(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     isEditor = models.BooleanField(default=False)
     watchlist = models.ManyToManyField(Show)
+    displayname = models.CharField(max_length=75)
+    isPublic = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
@@ -60,7 +62,7 @@ class UserEx(models.Model):
 @receiver(post_save, sender=User)
 def create_user_ex(sender, instance, created, **kwargs):
     if created:
-        UserEx.objects.create(user=instance)
+        UserEx.objects.create(user=instance, displayname=instance.username.title())
 
 @receiver(post_save, sender=User)
 def save_user_ex(sender, instance, **kwargs):

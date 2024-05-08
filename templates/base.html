@@ -1,14 +1,23 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% load static %}
+    {% load tvlog_extras %}
+    {% inDebug as res %}
+    {% if res %}
+    <link rel=apple-touch-icon sizes=180x180 href="{% static 'favicon_DEBUG/apple-touch-icon.png' %}">
+    <link rel=icon type=image/png sizes=32x32 href="{% static 'favicon_DEBUG/favicon-32x32.png' %}">
+    <link rel=icon type=image/png sizes=16x16 href="{% static 'favicon_DEBUG/favicon-16x16.png' %}">
+    <link rel=manifest href="{% static 'favicon_DEBUG/site.webmanifest' %}">
+    <link rel="shortcut icon" href="{% static 'favicon_DEBUG/favicon.ico' %}">
+    {% else %}
     <link rel=apple-touch-icon sizes=180x180 href="{% static 'favicon/apple-touch-icon.png' %}">
     <link rel=icon type=image/png sizes=32x32 href="{% static 'favicon/favicon-32x32.png' %}">
     <link rel=icon type=image/png sizes=16x16 href="{% static 'favicon/favicon-16x16.png' %}">
     <link rel=manifest href="{% static 'favicon/site.webmanifest' %}">
     <link rel="shortcut icon" href="{% static 'favicon/favicon.ico' %}">
+    {% endif %}
     <title>TV Log</title>
     {% load bootstrap5 %}
     {% bootstrap_css %}
@@ -42,11 +51,13 @@
             {% if user.is_authenticated %}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="author-name">{{ user.username }}</span>
+                <span>{{ user.userex.displayname }}</span>
               </a>
               <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'profile' user.username %}">My Profile</a></li>
                 <li><a class="dropdown-item" href="{% url 'watchlist' %}">Watchlist</a></li>
                 <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'editprofile' %}">Edit Profile</a></li>
                 <li><a class="dropdown-item" href="{% url 'account_email' %}">Manage Email</a></li>
                 <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Change Password</a></li>
                 <li><a class="dropdown-item" href="{% url 'account_logout' %}">Sign Out</a></li>

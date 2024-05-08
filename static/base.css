@@ -42,10 +42,6 @@ body {
   width: 800px;
 }
 
-.author-name {
-  text-transform: capitalize;
-}
-
 .subtitle {
   color: var(--bs-gray-500);
   margin-bottom: 0.5rem !important;
@@ -181,4 +177,9 @@ body {
 
 .about p {
   margin-bottom: 0;
+}
+
+.badge-owner {
+  --bs-bg-opacity: 1;
+  background-color: rgba(105, 109, 184, var(--bs-bg-opacity)) !important
 }

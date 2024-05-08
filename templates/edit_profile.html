@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Edit Profile</h1>
+<form action="" method="post">
+  {% csrf_token %}
+  <div class="mb-3 w-75">
+    <label for="{{ form.displayname.id_for_label }}" class="form-label">Display Name</label>
+    <input type="text" class="form-control {% if form.displayname.errors %}is-invalid{% endif %}" id="{{ form.displayname.id_for_label }}" name="{{ form.displayname.html_name }}" value="{{ form.displayname.value }}" maxlength=75 required>
+    <div class="invalid-feedback">
+      {{ form.displayname.errors }}
+    </div>
+  </div>
+  <div class="row g-2 mb-2">
+    <div class="col-sm">
+      <label for="fake-username" class="form-label">Username</label>
+      <div class="input-group">
+        <span class="input-group-text">@</span>
+        <input type="text" class="form-control" value="{{ profile.user.username }}" id="fake-username" disabled>
+      </div>
+    </div>
+    <div class="col-sm">
+      <ul>
+        <li>Username edits are not permitted by users. Contact the owner for information on how to change username.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="mb-3">
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="{{ form.isPublic.id_for_label }}" name="{{ form.isPublic.html_name }}" {% if form.isPublic.value %}checked{% endif %}>
+      <label class="form-check-label" for="{{ form.isPublic.id_for_label }}">Make profile public. This will make your profile visible to everyone, including people without an account!</label>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-success flex-fill">Submit</button>
+</form>
+{% endblock content %}

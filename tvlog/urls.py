@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import HomeView, ShowListView, ShowDetailView, WatchingCreateView, WatchingUpdateView, WatchingDeleteView, AboutView, SeasonCreateView, SeasonUpdateView, SeasonDeleteView, ShowCreateView, ShowUpdateView, ShowDeleteView, WatchListView, InviteCreateView
+from .views import HomeView, ShowListView, ShowDetailView, WatchingCreateView, WatchingUpdateView, WatchingDeleteView, AboutView, SeasonCreateView, SeasonUpdateView, SeasonDeleteView, ShowCreateView, ShowUpdateView, ShowDeleteView, WatchListView, InviteCreateView, ProfileView, EditProfileView
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
@@ -16,5 +16,7 @@ urlpatterns = [
     path("show/<slug:abbreviation>/edit", ShowUpdateView.as_view(), name="show_update"),
     path("show/<slug:abbreviation>/delete", ShowDeleteView.as_view(), name="show_delete"),
     path("watchlist", WatchListView.as_view(), name="watchlist"),
-    path("createinvite", InviteCreateView.as_view(), name="create_invite")
+    path("createinvite", InviteCreateView.as_view(), name="create_invite"),
+    path("@<slug:username>", ProfileView.as_view(), name="profile"),
+    path("editprofile", EditProfileView.as_view(), name="editprofile")
 ]

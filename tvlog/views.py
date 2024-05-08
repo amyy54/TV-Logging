@@ -21,14 +21,20 @@ class HomeView(TemplateView):
 
         user = self.request.user
         if user.is_authenticated:
-            context['current'] = [x for x in user.currentlywatching_set.order_by('-date') if x.episode < x.season.episodes]
+            context['current'] = [[x] for x in user.currentlywatching_set.order_by('-date') if x.episode < x.season.episodes]
             watched_shows = [x for x in user.currentlywatching_set.order_by('-date') if x.episode >= x.season.episodes]
-            watched_shows = [x for x in watched_shows if x.season.show not in [y.season.show for y in context['current']]]
+            watched_shows = [x for x in watched_shows if x.season.show not in [y[0].season.show for y in context['current']]]
 
-            # https://stackoverflow.com/a/480227
-            seen = set()
-            seen_add = seen.add
-            context['last_watched_shows'] = [x for x in watched_shows if not (x.season.show in seen or seen_add(x.season.show))][:3]
+            watched_shows_groups = {}
+
+            for watched in watched_shows:
+                abbreviation = watched.season.show.abbreviation
+                if abbreviation in watched_shows_groups:
+                    watched_shows_groups[abbreviation].append(watched)
+                else:
+                    watched_shows_groups[abbreviation] = [watched]
+
+            context['last_watched_shows'] = list(watched_shows_groups.values())[:3]
 
         context["last_added_shows"] = Show.objects.order_by('creation_date')[::-1][:3]
         return context
@@ -401,3 +407,51 @@ class InviteCreateView(LoginRequiredMixin, TemplateView):
         context['invite_url'] = invite_url
 
         return self.render_to_response(context=context)
+
+class ProfileView(DetailView):
+    model = User
+    template_name = "profile.html"
+    context_object_name = 'profile'
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = context['profile']
+
+        if not user.userex.isPublic:
+            if not self.request.user.is_authenticated or self.request.user != user:
+                raise Http404
+
+        context['current'] = [[x] for x in user.currentlywatching_set.order_by('-date') if x.episode < x.season.episodes]
+
+        watched_shows = [x for x in user.currentlywatching_set.order_by('-date') if x.episode >= x.season.episodes]
+        watched_shows_groups = {}
+
+        for watched in watched_shows:
+            abbreviation = watched.season.show.abbreviation
+            if abbreviation in watched_shows_groups:
+                watched_shows_groups[abbreviation].append(watched)
+            else:
+                watched_shows_groups[abbreviation] = [watched]
+
+        context['last_watched_shows'] = list(watched_shows_groups.values())
+
+        return context
+
+class EditProfileView(LoginRequiredMixin, UpdateView):
+    model = UserEx
+    template_name = "edit_profile.html"
+    context_object_name = 'profile'
+    fields = ["displayname", "isPublic"]
+    success_url = reverse_lazy("home")
+
+    def get_object(self, *args, **kwargs):
+        return self.request.user.userex
+
+    def form_valid(self, form, *args, **kwargs):
+        if form.instance.user != self.request.user:
+            raise Http404
+        else:
+            return super().form_valid(form)

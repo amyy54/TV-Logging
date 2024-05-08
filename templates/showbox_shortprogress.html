@@ -1,16 +1,21 @@
 {% load tvlog_extras %}
 <div class="showbox">
-  <a href="{% url 'show_detail' watching.season.show.abbreviation %}"><img class="me-2" src="{{ watching.season.show.boxart.url }}" width=100 height=147></a>
+  <a href="{% url 'show_detail' watching.0.season.show.abbreviation %}"><img class="me-2" src="{{ watching.0.season.show.boxart.url }}" width=100 height=147></a>
   <div class="text">
-    <a class="h1 show-title-link" href="{% url 'show_detail' watching.season.show.abbreviation %}">{{ watching.season.show.name }}</a>
-    <p class="subtitle">({{ watching.season.show|showrun }})</p>
-    <p>Season {{ watching.season.name }} - Episode {{ watching.episode }}/{{ watching.season.episodes }} <span class="subtitle">{{ watching|watchingdate }}</span></p>
-    {% if watching.episode >= watching.season.episodes and watching.rating != 0 %}
-    <div class="mt-1 rating-stars">{% rating watching.rating %}</div>
+    <a class="h1 show-title-link" href="{% url 'show_detail' watching.0.season.show.abbreviation %}">{{ watching.0.season.show.name }}</a>
+    <p class="subtitle">({{ watching.0.season.show|showrun }})</p>
+    {% for watch in watching %}
+    <div class="image-inline">
+      <p>Season {{ watch.season.name }} - Episode {{ watch.episode }}/{{ watch.season.episodes }} <span class="subtitle">{{ watch|watchingdate }}</span></p>
+      {% if watch.rewatch %}{% include "svg/arrow.triangle.2.circlepath.svg" %}{% endif %}
+    </div>
+    {% if watch.episode >= watch.season.episodes and watch.rating != 0 %}
+    <div class="mt-1 rating-stars">{% rating watch.rating %}</div>
     {% else %}
     <div class="pbar">
-      <div class="pbar-progress" style="width: {{ watching|seasonprogress }}%;">{{ watching|seasonprogress }}%</div>
+      <div class="pbar-progress" style="width: {{ watch|seasonprogress }}%;">{{ watch|seasonprogress }}%</div>
     </div>
     {% endif %}
+    {% endfor %}
   </div>
 </div>
