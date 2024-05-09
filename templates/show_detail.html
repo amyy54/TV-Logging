@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load tvlog_extras %}
 {% block content %}
-<div class="detail-left">
+<div class="detail-left d-none d-md-block">
   <img class="mb-4" src="{{ show.boxart.url }}" width=250 height=368>
   {% if user.is_authenticated %}
   <div class="dropdown mb-2">
@@ -48,7 +48,7 @@
 <div>
   <p class="display-4">{{ show.name }} <span class="subtitle small-subtitle">({{ show|showrun }})</span></p>
   <hr>
-  <div class="d-flex">
+  <div class="d-none d-md-flex">
     <div class="flex-fill">
       {% if seasonplural %}
       <p class="h2">Seasons</p>
@@ -84,6 +84,79 @@
       {% endfor %}
     </div>
     {% endif %}
+  </div>
+  <div class="d-block d-md-none">
+    {% if user.is_authenticated and show_progress %}
+    <p class="h2">My Progress</p>
+    {% for watching in progress_watching %}
+    <p class="mb-0">Season {{ watching.season.name }} - Episode {{ watching.episode}}/{{ watching.season.episodes }} <span class="subtitle">{{ watching|watchingdate }}</span></p>
+    <div class="pbar mb-2">
+      <div class="pbar-progress" style="width: {{ watching|seasonprogress }}%;">{{ watching|seasonprogress }}%</div>
+    </div>
+    {% endfor %}
+    {% if progress_watching and progress_watched %}<hr>{% endif %}
+    {% for watched in progress_watched %}
+    <div class="image-inline">
+      <p class="mb-0">Season {{ watched.season.name }} - Episode {{ watched.episode}}/{{ watched.season.episodes }} <span class="subtitle">{{ watched|watchingdate }}</span></p>
+      {% if watched.rewatch %}{% include "svg/arrow.triangle.2.circlepath.svg" %}{% endif %}
+    </div>
+    {% if watched.rating == 0 %}
+    <div class="pbar mb-2">
+      <div class="pbar-progress" style="width: 100%;">100%</div>
+    </div>
+    {% else %}
+    <div class="rating-stars">{% rating watched.rating %}</div>
+    {% endif %}
+    {% endfor %}
+    <div class="dropdown mb-2 mt-2">
+      <button class="btn btn-outline-success dropdown-toggle w-75" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Log TV Show
+      </button>
+      <ul class="dropdown-menu">
+        <li><form class="mb-0" action="" method="post">{% csrf_token %}<input type="hidden" name="show" value="{{ show.abbreviation }}"><button class="dropdown-item" type="submit">{% if is_watchlist %}Remove from Watchlist{% else %}Add to Watchlist{% endif %}</button></form></li>
+        <li><hr class="dropdown-divider"></li>
+        {% if progress_watched|length != seasons|length and progress_watching|length != seasons|length %}
+        <li><a class="dropdown-item" href="{% url 'log_new' show.abbreviation %}">Log New Season</a></li>
+        {% endif %}
+        {% if progress_watching %}
+        <li><h6 class="dropdown-header">Update Watching</h6></li>
+        {% for watching in progress_watching %}
+        <li><a class="dropdown-item" href="{% url 'log_update' show.abbreviation watching.pk %}">Season {{ watching.season.name }} - {{ watching.episode }}/{{ watching.season.episodes }}</a></li>
+        {% endfor %}
+        {% endif %}
+        {% if progress_watched %}
+        <li><h6 class="dropdown-header">Update Watched</h6></li>
+        {% for watched in progress_watched %}
+        <li><a class="dropdown-item" href="{% url 'log_update' show.abbreviation watched.pk %}">Season {{ watched.season.name }} - {% if rating == 0 %}{{ watched|watchingdate }}{% else %}{{ watched.rating|ratingoutof5 }}/5 Stars{% endif %}</a></li>
+        {% endfor %}
+        {% endif %}
+      </ul>
+    </div>
+    {% if user.userex.isEditor %}
+    <div class="dropdown">
+      <button class="btn btn-outline-danger dropdown-toggle w-75" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Moderator Actions
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="{% url 'show_update' show.abbreviation %}">Update Show</a></li>
+        <li><a class="dropdown-item" href="{% url 'season_new' show.abbreviation %}">Add Season</a></li>
+        <li><h6 class="dropdown-header">Update {% if seasonplural %}Seasons{% else %}Season{% endif %}</h6></li>
+        {% for season in seasons %}
+        <li><a class="dropdown-item" href="{% url 'season_update' show.abbreviation season.pk %}">Season {{ season.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    <hr>
+    {% endif %}
+    {% if seasonplural %}
+    <p class="h2">Seasons</p>
+    {% else %}
+    <p class="h2">Season</p>
+    {% endif %}
+    {% for season in seasons %}
+    <p>{{ season.name }} - {{ season.episodes }} episodes <span class="subtitle">{{ season|seasonmd }}</span></p>
+    {% endfor %}
   </div>
 </div>
 {% endblock content %}

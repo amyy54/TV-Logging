@@ -37,9 +37,37 @@ body {
   color: var(--bs-white);
 }
 
-.content {
-  margin: 0 auto;
-  width: 800px;
+@media only screen and (min-width: 815px) {
+  .content {
+    margin: 0 auto;
+    width: 800px;
+  }
+}
+
+@media only screen and (max-width: 815px) {
+  .content {
+    padding-left: 0.5rem;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .showbox-smalltext {
+    display: inline-block;
+  }
+
+  .showbox-text {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 450px) {
+  .showbox-smalltext {
+    display: none;
+  }
+
+  .showbox-text {
+    display: inline-block
+  }
 }
 
 .subtitle {
@@ -142,7 +170,13 @@ body {
   width: 0px;
 
   input {
-    width: 70%;
+    width: 100px;
+  }
+
+  @media only screen and (min-width: 768px) {
+    input {
+      width: 70%;
+    }
   }
 }
 
@@ -165,14 +199,21 @@ body {
 .image-inline {
   display: flex;
   align-items: center;
-  width: 110%;
   svg {
     margin-left: 0.3rem;
   }
 }
 
-.row .form-check {
-  padding-top: 2.3rem;
+@media only screen and (min-width: 576px) {
+  .row .form-check {
+    padding-top: 2.3rem;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .row .form-check {
+    padding-left: 2rem;
+  }
 }
 
 .about p {
@@ -182,4 +223,8 @@ body {
 .badge-owner {
   --bs-bg-opacity: 1;
   background-color: rgba(105, 109, 184, var(--bs-bg-opacity)) !important
+}
+
+.col-sm {
+  width: 99%;
 }

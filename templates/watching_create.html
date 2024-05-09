@@ -43,7 +43,7 @@
     </div>
   </div>
   <label class="forn-label">Rating</label>
-  <div class="d-flex w-50 mb-4">
+  <div class="d-block d-md-flex w-50 mb-4">
     <div class="flex-fill rating-input">
       <input type="number" class="form-control {% if form.rating.errors %}is-invalid{% endif %}" name="{{ form.rating.html_name }}" id="{{ form.rating.id_for_label }}" min=0 max=10 value={{ form.rating.value }} onchange="rating_changed()">
       <div class="invalid-feedback">

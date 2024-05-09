@@ -1,5 +1,5 @@
 {% load tvlog_extras %}
-<div class="showbox">
+<div class="showbox d-flex">
   <a href="{% url 'show_detail' watching.0.season.show.abbreviation %}"><img class="me-2" src="{{ watching.0.season.show.boxart.url }}" width=100 height=147></a>
   <div class="text">
     <a class="h1 show-title-link" href="{% url 'show_detail' watching.0.season.show.abbreviation %}">{{ watching.0.season.show.name }}</a>
@@ -7,7 +7,8 @@
     {% for watch in watching %}
     {% if watch %}
     <div class="image-inline">
-      <p>Season {{ watch.season.name }} - Episode {{ watch.episode }}/{{ watch.season.episodes }} <span class="subtitle">{{ watch|watchingdate }}</span></p>
+      <p class="showbox-text">Season {{ watch.season.name }} - Episode {{ watch.episode }}/{{ watch.season.episodes }} <span class="subtitle">{{ watch|watchingdate }}</span></p>
+      <p class="showbox-smalltext">S {{ watch.season.name }} - Ep {{ watch.episode }}/{{ watch.season.episodes }} <span class="subtitle">{{ watch|watchingdate }}</span></p>
       {% if watch.rewatch %}{% include "svg/arrow.triangle.2.circlepath.svg" %}{% endif %}
     </div>
     {% if watch.episode >= watch.season.episodes and watch.rating != 0 %}
