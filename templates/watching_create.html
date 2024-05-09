@@ -32,7 +32,7 @@
     </div>
     <div class="col-sm">
       <label for="{{ form.episode.id_for_label }}" class="form-label" required>Episode</label>
-      <input type="number" class="form-control {% if form.episode.errors %}is-invalid{% endif %}" name="{{ form.episode.html_name }}" id="{{ form.episode.id_for_label }}" min=0 value={{ form.episode.value }}>
+      <input type="number" class="form-control {% if form.episode.errors %}is-invalid{% endif %}" name="{{ form.episode.html_name }}" id="{{ form.episode.id_for_label }}" min=0 value={{ form.episode.value }} {% if watching %}max={{ watching.season.episodes }}{% endif %}>
       <div class="invalid-feedback">
         {{ form.episode.errors }}
       </div>

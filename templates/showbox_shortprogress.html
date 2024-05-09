@@ -5,6 +5,7 @@
     <a class="h1 show-title-link" href="{% url 'show_detail' watching.0.season.show.abbreviation %}">{{ watching.0.season.show.name }}</a>
     <p class="subtitle">({{ watching.0.season.show|showrun }})</p>
     {% for watch in watching %}
+    {% if watch %}
     <div class="image-inline">
       <p>Season {{ watch.season.name }} - Episode {{ watch.episode }}/{{ watch.season.episodes }} <span class="subtitle">{{ watch|watchingdate }}</span></p>
       {% if watch.rewatch %}{% include "svg/arrow.triangle.2.circlepath.svg" %}{% endif %}
@@ -15,6 +16,9 @@
     <div class="pbar">
       <div class="pbar-progress" style="width: {{ watch|seasonprogress }}%;">{{ watch|seasonprogress }}%</div>
     </div>
+    {% endif %}
+    {% else %}
+    <h3 class="ms-2"><a class="show-title-link" href="{% url 'show_detail' watching.0.season.show.abbreviation %}">...</a></h3>
     {% endif %}
     {% endfor %}
   </div>

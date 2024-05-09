@@ -12,6 +12,7 @@ from django.urls import reverse_lazy, reverse
 from invitations.utils import get_invitation_model
 from .models import Show, CurrentlyWatching, Season, UserEx
 from .forms import NewLogForm
+from .utils import create_watching_groups
 # Create your views here.
 class HomeView(TemplateView):
     template_name = "home.html"
@@ -21,20 +22,11 @@ class HomeView(TemplateView):
 
         user = self.request.user
         if user.is_authenticated:
-            context['current'] = [[x] for x in user.currentlywatching_set.order_by('-date') if x.episode < x.season.episodes]
+            current = [x for x in user.currentlywatching_set.order_by('-date') if x.episode < x.season.episodes]
+            context['current'] = create_watching_groups(current)
+
             watched_shows = [x for x in user.currentlywatching_set.order_by('-date') if x.episode >= x.season.episodes]
-            watched_shows = [x for x in watched_shows if x.season.show not in [y[0].season.show for y in context['current']]]
-
-            watched_shows_groups = {}
-
-            for watched in watched_shows:
-                abbreviation = watched.season.show.abbreviation
-                if abbreviation in watched_shows_groups:
-                    watched_shows_groups[abbreviation].append(watched)
-                else:
-                    watched_shows_groups[abbreviation] = [watched]
-
-            context['last_watched_shows'] = list(watched_shows_groups.values())[:3]
+            context['last_watched_shows'] = create_watching_groups(watched_shows, max_shows_displayed=3)[:3]
 
         context["last_added_shows"] = Show.objects.order_by('creation_date')[::-1][:3]
         return context
@@ -424,19 +416,13 @@ class ProfileView(DetailView):
             if not self.request.user.is_authenticated or self.request.user != user:
                 raise Http404
 
-        context['current'] = [[x] for x in user.currentlywatching_set.order_by('-date') if x.episode < x.season.episodes]
+        current = [x for x in user.currentlywatching_set.order_by('-date') if x.episode < x.season.episodes]
+        context['current'] = create_watching_groups(current)
 
         watched_shows = [x for x in user.currentlywatching_set.order_by('-date') if x.episode >= x.season.episodes]
-        watched_shows_groups = {}
+        context['last_watched_shows'] = create_watching_groups(watched_shows)
 
-        for watched in watched_shows:
-            abbreviation = watched.season.show.abbreviation
-            if abbreviation in watched_shows_groups:
-                watched_shows_groups[abbreviation].append(watched)
-            else:
-                watched_shows_groups[abbreviation] = [watched]
-
-        context['last_watched_shows'] = list(watched_shows_groups.values())
+        context['stats'] = f"{len(context['last_watched_shows'])} shows, {len(watched_shows)} seasons"
 
         return context
 
