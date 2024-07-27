@@ -135,10 +135,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = getenv("STATIC_URL", 'static/')
-STATICFILES_DIRS = [str(BASE_DIR.joinpath("static"))]
-if not DEBUG:
+if DEBUG:
+    STATICFILES_DIRS = [str(BASE_DIR.joinpath("static"))]
+else:
     STATIC_ROOT = getenv("STATIC_ROOT", str(BASE_DIR.joinpath("static")))
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
+CSRF_TRUSTED_ORIGINS = getenv("CSRF_TRUSTED_ORIGINS", "http://127.0.0.1").split(",")
 
 MEDIA_URL = getenv("MEDIA_URL", 'media/')
 MEDIA_ROOT = getenv("MEDIA_ROOT", str(BASE_DIR.joinpath("media")))
