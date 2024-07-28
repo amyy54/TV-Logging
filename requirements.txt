@@ -3,3 +3,4 @@ pillow~=10.3
 django-bootstrap-v5~=1.0
 django-allauth~=0.62
 django-invitations @ git+https://github.com/amyy54/django-invitations.git@amy-changes
+psycopg==3.2.1

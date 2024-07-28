@@ -92,12 +92,24 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if getenv("DB_ENGINE", "sqlite3") == "postgres":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': getenv("PG_NAME", "tvlog"),
+            'USER': getenv("PG_USER", "tvlog"),
+            'PASSWORD': getenv("PG_PASS", "please-set-this-value-lol"),
+            'HOST': getenv("PG_HOST", "127.0.0.1"),
+            'PORT': getenv("PG_PORT", 5432)
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
